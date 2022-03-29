@@ -1,6 +1,11 @@
-mod discord_handler;
+mod discord;
+mod command;
+mod task;
+mod error;
+mod tests;
+mod log;
 
-use discord_handler::start_bot;
+use discord::activate;
 use tokio::runtime::Runtime;
 
 fn main() {
@@ -8,5 +13,5 @@ fn main() {
 
     let mut run_time = Runtime::new().unwrap();
 
-    run_time.block_on(start_bot(&token)).expect("Error creating client.");
+    run_time.block_on(activate(&token)).expect("Error creating client.");
 }
