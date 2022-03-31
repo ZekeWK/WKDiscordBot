@@ -3,7 +3,9 @@ use std::fmt;
 
 pub enum CommandError {
     MissingAction,
-    NotAction
+    NotAction,
+    MissingArgs,
+    UnvalidArgs,
 }
 
 impl fmt::Debug for CommandError {

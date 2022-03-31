@@ -2,7 +2,7 @@
 
 
 
-use crate::error::CommandError;
+use crate::standard::error::CommandError;
 use serenity::model::{id::ChannelId, user::User, channel::{Message, self}};
 
 const SEPARATOR : &str = " ";
@@ -12,35 +12,30 @@ const HELP_WORD : &str = "help";
 const PING_WORD : &str = "ping";
 const LIERS_DICE_WORD : &str = "liers_dice";
 
-
-
-
-
-
-struct Command {
+struct Command <I> where I : std::iter::Iterator<Item = String> {
     author : User,
     channel : ChannelId,
     command : CommandType,
+    args : I,
 }
 
 impl Command {
     fn new(author : User, channel : ChannelId, command : CommandType) -> Command {
         Command{author : author, channel : channel, command : command}
     }
-
+    
     //TODO add ways to info.
 }
 
+use CommandType::*;
 pub enum CommandType {
     NoOp,
     Ping,
     Help,
-    LiersDice((u32, Vec<User>)),
-    Error(CommandError),
+    LiersDice,
 }
-use CommandType::*;
 
-fn command_parse(message : Message) -> Command {
+fn command_parse(message : Message) -> Result<Command, CommandError> {
     let author = message.author;
     let channel = message.channel_id;
 
@@ -69,13 +64,4 @@ fn command_parse(message : Message) -> Command {
             _ => Error(CommandError::NotAction),
         }
     );
-}
-
-enum LiersDiceAction {
-    Create((u32, Vec<User>)),
-
-}
-
-fn liers_dice_parse(args : impl std::iter::Iterator<Item = String>) {
-    todo!()
 }

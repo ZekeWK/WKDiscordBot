@@ -1,11 +1,19 @@
-mod discord;
-mod command;
-mod task;
-mod error;
-mod tests;
-mod log;
+#[path ="base.rs"] //Maybe make games into traits?
+mod base {
+    pub mod discord;
+    pub mod command;
+    pub mod task;
+    pub mod error;
+    pub mod tests;
+    pub mod log;
+}
 
-use discord::activate;
+#[path ="games.rs"]
+mod games {
+    pub mod liers_dice;
+}
+
+use base::discord::activate;
 use tokio::runtime::Runtime;
 
 fn main() {
