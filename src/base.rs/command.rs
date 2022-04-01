@@ -1,67 +1,43 @@
-/* All commands should be on the format : "PREFIX,COMMANDTYPE,ARGS..." where , denotes the SEPARATOR  */
-
-
-
-use crate::standard::error::CommandError;
+use crate::base::{error::CommandError, service::{Service, SERVICES}};
 use serenity::model::{id::ChannelId, user::User, channel::{Message, self}};
 
+const PREFIX : &str = "Zeke";
 const SEPARATOR : &str = " ";
-const PREFIX : &str = "Zeke ";
-const NO_OP_WORD : &str = "NoOP";
-const HELP_WORD : &str = "help";
-const PING_WORD : &str = "ping";
-const LIERS_DICE_WORD : &str = "liers_dice";
 
-struct Command <I> where I : std::iter::Iterator<Item = String> {
+pub struct Command {
     author : User,
     channel : ChannelId,
-    command : CommandType,
-    args : I,
+    service : Service,
+    args : Vec<String>,
 }
 
 impl Command {
-    fn new(author : User, channel : ChannelId, command : CommandType) -> Command {
-        Command{author : author, channel : channel, command : command}
+    fn new(author : User, channel : ChannelId, service : Service, args : Vec<String>) -> Command {
+        Command{author : author, channel : channel, service : service, args : args}
     }
-    
-    //TODO add ways to info.
 }
 
-use CommandType::*;
-pub enum CommandType {
-    NoOp,
-    Ping,
-    Help,
-    LiersDice,
-}
-
-fn command_parse(message : Message) -> Result<Command, CommandError> {
+pub fn command_parse(message : Message) -> Result<Command, CommandError> {
     let author = message.author;
     let channel = message.channel_id;
 
-    let mut args = message.content.split(SEPARATOR).filter(|x| *x != SEPARATOR); //This might need... change in the future.
-
-    let command_create = |command_type| {Command::new(author, channel, command_type)};
-
+    let mut args = message.content.split(SEPARATOR).filter(|x| *x != SEPARATOR);
+    
     if args.next() != Some(PREFIX) {
-        return command_create(NoOp);
+        return Err(CommandError::NotBot);
     }
 
-    let command_type = match args.next() {
+    let service_identifier = match args.next() {
         Some(val) => val,
-        None => return command_create(Error(CommandError::MissingAction)),
+        None => return Err(CommandError::MissingService),
     };
 
-    return command_create(
-        match command_type {
-            NO_OP_WORD => NoOp,
-            HELP_WORD => Help,
-            PING_WORD => Ping,
-            LIERS_DICE_WORD => todo!(),
-    
-    
-            
-            _ => Error(CommandError::NotAction),
-        }
-    );
+    for service in SERVICES {
+        if service.identifier != service_identifier {continue;}
+        let args : Vec<String> = args.map(|x| x.to_string()).collect();
+
+        return Ok(Command::new(author, channel, service, args));
+    }
+
+    return Err(CommandError::NotService);
 }

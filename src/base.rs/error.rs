@@ -2,8 +2,9 @@ use std::io::Error;
 use std::fmt;
 
 pub enum CommandError {
-    MissingAction,
-    NotAction,
+    NotBot,
+    MissingService,
+    NotService,
     MissingArgs,
     UnvalidArgs,
 }

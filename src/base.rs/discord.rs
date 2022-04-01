@@ -5,11 +5,14 @@ use serenity::{
     Error
 };
 
+use crate::base::command::command_parse;
+
 struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler { //Make it multithread over multiple channels, but not over a single channel as that could lead to some issues during heavy load.
     async fn message(&self, ctx: Context, msg: Message) {
+        let command = command_parse(msg);
         //Use a function to Parse message and get a iterator of commands
         //Send to task manager which prepares the message and works with relevant data.
         //Send the message.

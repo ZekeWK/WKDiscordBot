@@ -1,4 +1,4 @@
-#[path ="base.rs"] //Maybe make games into traits?
+#[path ="base.rs"] //In the future one could maybe allow for services to have an init and such...
 mod base {
     pub mod discord;
     pub mod command;
@@ -6,11 +6,14 @@ mod base {
     pub mod error;
     pub mod tests;
     pub mod log;
+    pub mod service;
+    pub mod memory;
 }
 
-#[path ="games.rs"]
-mod games {
+#[path ="services.rs"]
+mod services {
     pub mod liers_dice;
+    pub mod info;
 }
 
 use base::discord::activate;
