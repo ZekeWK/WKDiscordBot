@@ -1,12 +1,9 @@
-use std::io::Error;
 use std::fmt;
 
 pub enum CommandError {
     NotBot,
     MissingService,
     NotService,
-    MissingArgs,
-    UnvalidArgs,
 }
 
 impl fmt::Debug for CommandError {

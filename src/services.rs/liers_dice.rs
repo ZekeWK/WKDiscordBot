@@ -1,14 +1,14 @@
 use crate::base::{
     error::CommandError,
-    memory::MemoryChange,
     service::Service,
     command::Command,
 };
 
-use serenity::model::channel::Message;
+use serenity::model::id::ChannelId;
+use serenity::builder::CreateMessage;
 
 pub const LIERS_DICE_SERVICE : Service = Service{ identifier : "liers_dice", handler : liers_dice_handler};
 
-fn liers_dice_handler(command : Command) -> (Message, MemoryChange) {
+fn liers_dice_handler(command : Command) -> (ChannelId, CreateMessage<'static>) {
     todo!()
 }

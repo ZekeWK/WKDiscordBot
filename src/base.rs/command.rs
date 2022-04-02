@@ -1,23 +1,24 @@
-use crate::base::{error::CommandError, service::{Service, SERVICES}};
-use serenity::model::{id::ChannelId, user::User, channel::{Message, self}};
+//TODO Will later allow for state like behaviour within threads. That is what the memory module will be for.
 
-const PREFIX : &str = "Zeke";
+use crate::base::{error::CommandError, service::{Service, SERVICES}};
+use serenity::model::{id::ChannelId, user::User, channel::Message};
+
+const PREFIX : &str = "Zeke,";
 const SEPARATOR : &str = " ";
 
 pub struct Command {
-    author : User,
-    channel : ChannelId,
-    service : Service,
-    args : Vec<String>,
+    pub author : User,
+    pub channel : ChannelId,
+    pub args : Vec<String>,
 }
 
 impl Command {
-    fn new(author : User, channel : ChannelId, service : Service, args : Vec<String>) -> Command {
-        Command{author : author, channel : channel, service : service, args : args}
+    fn new(author : User, channel : ChannelId, args : Vec<String>) -> Command {
+        Command{author : author, channel : channel, args : args}
     }
 }
 
-pub fn command_parse(message : Message) -> Result<Command, CommandError> {
+pub fn command_parse(message : Message) -> Result<(Service, Command), CommandError> {
     let author = message.author;
     let channel = message.channel_id;
 
@@ -36,7 +37,7 @@ pub fn command_parse(message : Message) -> Result<Command, CommandError> {
         if service.identifier != service_identifier {continue;}
         let args : Vec<String> = args.map(|x| x.to_string()).collect();
 
-        return Ok(Command::new(author, channel, service, args));
+        return Ok((service, Command::new(author, channel, args)));
     }
 
     return Err(CommandError::NotService);
