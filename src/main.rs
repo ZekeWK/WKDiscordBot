@@ -13,6 +13,7 @@ mod base {
 mod services {
     pub mod liers_dice;
     pub mod info;
+    pub mod dice;
 }
 
 use base::discord::activate;
