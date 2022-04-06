@@ -3,8 +3,8 @@
 use crate::base::{error::CommandError, service::{Service, SERVICES}};
 use serenity::model::{id::ChannelId, user::User, channel::Message};
 
-const PREFIX : &str = "Zeke,";
-const SEPARATOR : &str = " ";
+pub const PREFIX : &str = "Zeke,";
+pub const SEPARATOR : &str = " ";
 
 pub struct Command {
     pub author : User,
