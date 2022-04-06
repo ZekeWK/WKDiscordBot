@@ -19,12 +19,12 @@ impl EventHandler for Handler { //Make it multithread over multiple channels, bu
             _ => unreachable!(),
         };
 
-        let (channel, mut message) = service.execute(command);//Should later allow for multiple messages
+        let (channel, mut message) = service.execute(command);
 
-        channel.send_message(ctx.http, |_| &mut message).await.unwrap(); //Instead reply message
-        //Use a function to Parse message and get a iterator of commands
-        //Send to task manager which prepares the message and works with relevant data.
-        //Send the message.
+        channel.send_message(ctx.http, |_| &mut message).await.unwrap(); 
+        
+        //Should later allow for multiple messages
+        //Instead reply to message maybe?
         //Will also use the tying marker for when preparing a new message. The start_typing function.
     }
 }
