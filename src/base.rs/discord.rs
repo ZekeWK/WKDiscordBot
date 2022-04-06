@@ -14,8 +14,7 @@ impl EventHandler for Handler { //Make it multithread over multiple channels, bu
     async fn message(&self, ctx: Context, msg: Message) {
         let (service, command) = match command_parse(&msg) {
             Ok(val) => val,
-            Err(CommandError::NotBot) => return,
-            Err(CommandError::MissingService) => return,
+            Err(CommandError::NotBot | CommandError::MissingService | CommandError::NotService) => return,
             _ => unreachable!(),
         };
 
