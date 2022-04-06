@@ -1,28 +1,30 @@
 //TODO Will later allow for state like behaviour within threads. That is what the memory module will be for.
 
 use crate::base::{error::CommandError, service::{Service, SERVICES}};
-use serenity::model::{id::ChannelId, user::User, channel::Message};
+use serenity::model::{id::{ChannelId, UserId}, channel::Message};
 
 pub const PREFIX : &str = "Zeke,";
 pub const SEPARATOR : &str = " ";
 
-pub struct Command {
-    pub author : User,
+pub type ArgsIter<'a> = std::iter::Filter<std::str::Split<'a, &'static str>, fn(&&'a str) -> bool>;
+
+pub struct Command<'a> {
+    pub author : UserId,
     pub channel : ChannelId,
-    pub args : Vec<String>,
+    pub args : ArgsIter<'a>,
 }
 
-impl Command {
-    fn new(author : User, channel : ChannelId, args : Vec<String>) -> Command {
+impl <'a> Command<'a> {
+    fn new(author : UserId, channel : ChannelId, args : ArgsIter<'a>) -> Command<'a> {
         Command{author : author, channel : channel, args : args}
     }
 }
 
-pub fn command_parse(message : Message) -> Result<(Service, Command), CommandError> {
-    let author = message.author;
+pub fn command_parse<'a>(message : &'a Message) -> Result<(Service, Command), CommandError> {
+    let author = message.author.id;
     let channel = message.channel_id;
 
-    let mut args = message.content.split(SEPARATOR).filter(|x| *x != SEPARATOR);
+    let mut args : ArgsIter = message.content.split(SEPARATOR).filter(|x| *x != SEPARATOR);
     
     if args.next() != Some(PREFIX) {
         return Err(CommandError::NotBot);
@@ -35,8 +37,6 @@ pub fn command_parse(message : Message) -> Result<(Service, Command), CommandErr
 
     for service in SERVICES {
         if service.identifier != service_identifier {continue;}
-        let args : Vec<String> = args.map(|x| x.to_string()).collect();
-
         return Ok((service, Command::new(author, channel, args)));
     }
 
