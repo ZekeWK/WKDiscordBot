@@ -19,7 +19,23 @@ pub mod help {
     fn help_handler(command : Command, _data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> {
         let mut message = CreateMessage::default();
         message.content(
-            "Hello! This is a bot by William Kraft. It is currently under heavy development and this is where you will find help later on.");
+            "You will find help here later on."
+        );
+
+        return vec![(command.channel, message)];
+    }
+}
+
+pub mod info {
+    use crate::base::service::service_prelude::*;
+
+    pub const INFO_SERVICE : Service = Service{identifier : "info", handler : info_handler};
+
+    fn info_handler(command : Command, _data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> {
+        let mut message = CreateMessage::default();
+        message.content(
+            "<@958421014063239209> is a bot by William Kraft. It is currently under heavy development, but the code can be found at https://github.com/ZekeWK/WKDiscordBot ."
+        );
 
         return vec![(command.channel, message)];
     }
