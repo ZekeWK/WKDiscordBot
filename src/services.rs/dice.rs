@@ -1,4 +1,4 @@
-use crate::base::{service::Service, command::Command};
+use crate::base::{service::Service, command::Command, memory::Data};
 use serenity::{model::id::ChannelId, builder::CreateMessage};
 
 pub const DICE_SERVICE : Service = Service{identifier : "dice", handler : dice_handler};
@@ -7,7 +7,7 @@ pub const DICE_SERVICE : Service = Service{identifier : "dice", handler : dice_h
 
 
 
-fn dice_handler(command : Command) -> Vec<(ChannelId, CreateMessage<'static>)> { //Not good code.
+fn dice_handler(command : Command, data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> { //Not good code.
 /*    let mut args = &mut command.args.iter().map(|x| x.chars()).flatten().peekable();
 
     let mut answer = String::new();
@@ -57,8 +57,5 @@ fn dice_handler(command : Command) -> Vec<(ChannelId, CreateMessage<'static>)> {
 
     
 */    
-    
-    let message = todo!();
-    
-    return vec![(command.channel, message)];
+    todo!()
 }

@@ -7,6 +7,7 @@ mod base {
     pub mod log;
     pub mod service;
     pub mod memory;
+    pub mod secret;
 }
 
 #[path ="services.rs"]
@@ -17,12 +18,11 @@ mod services {
 }
 
 use base::discord::activate;
+use base::secret::OAUTH;
 use tokio::runtime::Runtime;
 
 fn main() {
-    let token = std::env::var("WK_DISCORD_TOKEN").expect("Error getting token.");
-
     let run_time = Runtime::new().unwrap();
 
-    run_time.block_on(activate(&token)).expect("Error creating client.");
+    run_time.block_on(activate(OAUTH)).expect("Error creating client.");
 }
