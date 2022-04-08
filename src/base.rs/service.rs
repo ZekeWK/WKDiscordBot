@@ -6,11 +6,7 @@ pub const SERVICES : [Service; 4]= [dice::DICE_SERVICE, liers_dice::LIERS_DICE_S
 #[derive(Clone, Copy)]
 pub struct Service {
     pub identifier : &'static str,
-    pub handler : fn(Command) -> (ChannelId, CreateMessage<'static>),
+    pub handler : ServiceHandler,
 }
 
-impl Service {
-    pub fn execute(&self, command : Command) -> (ChannelId, CreateMessage<'static>) {
-        (self.handler)(command)
-    }
-}
+pub type ServiceHandler = fn(Command) -> Vec<(ChannelId, CreateMessage<'static>)>;

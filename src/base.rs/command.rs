@@ -1,9 +1,9 @@
 //TODO Will later allow for state like behaviour within threads. That is what the memory module will be for.
 
-use crate::base::{error::CommandError, service::{Service, SERVICES}};
+use crate::base::{error::CommandError, service::{Service, SERVICES, ServiceHandler}};
 use serenity::model::{id::{ChannelId, UserId}, channel::Message};
 
-pub const PREFIX : &str = "Zeke,";
+pub const PREFIX : &str = "Argon,";
 pub const SEPARATOR : &str = " ";
 
 pub type ArgsIter<'a> = std::iter::Filter<std::str::Split<'a, &'static str>, fn(&&'a str) -> bool>;
@@ -20,7 +20,7 @@ impl <'a> Command<'a> {
     }
 }
 
-pub fn command_parse<'a>(message : &'a Message) -> Result<(Service, Command), CommandError> {
+pub fn command_parse<'a>(message : &'a Message) -> Result<(ServiceHandler, Command), CommandError> {
     let author = message.author.id;
     let channel = message.channel_id;
 
@@ -37,7 +37,7 @@ pub fn command_parse<'a>(message : &'a Message) -> Result<(Service, Command), Co
 
     for service in SERVICES {
         if service.identifier != service_identifier {continue;}
-        return Ok((service, Command::new(author, channel, args)));
+        return Ok((service.handler, Command::new(author, channel, args)));
     }
 
     return Err(CommandError::NotService);
