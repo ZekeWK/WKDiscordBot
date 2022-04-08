@@ -21,8 +21,9 @@ impl EventHandler for Handler { //Make it multithread over multiple channels, bu
 
         let messages = service_handler(command);
 
-        join_all(messages.into_iter().map(|(channel, message)| channel.send_message(&ctx.http, |msg| {*msg = message; return msg;}))).await;
-        
+        let results = join_all(messages.into_iter().map(|(channel, message)| channel.send_message(&ctx.http, |msg| {*msg = message; return msg;}))).await;
+        //Should maybe check for errors?
+
         //Will also use the tying marker for when preparing a new message. The start_typing function.
         //Similairly might in the future need new command versions to support working with state in threads.
         //Look the filter message.
