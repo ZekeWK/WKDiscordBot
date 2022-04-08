@@ -1,5 +1,5 @@
 use crate::base::{error::CommandError, service::{SERVICES, Service}, secret::USER_MENTION};
-use serenity::model::{id::{ChannelId, UserId, MessageId, GuildId}, channel::{Message, MessageReference}};
+use serenity::model::{id::{ChannelId, UserId, MessageId}, channel::{Message, MessageReference}};
 
 pub const PREFIX : &str = USER_MENTION;
 pub const SEPARATOR : &str = " ";

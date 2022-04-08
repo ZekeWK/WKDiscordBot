@@ -1,6 +1,6 @@
 use serenity::{async_trait, model::channel::Message, prelude::*, Error};
 
-use crate::base::{command::command_parse, error::CommandError, memory::{parent_data, Data, create_attachment}};
+use crate::base::{command::command_parse, error::CommandError, memory::parent_data};
 
 use futures::future::join_all;
 struct Handler;

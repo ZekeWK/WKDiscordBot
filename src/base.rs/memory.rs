@@ -1,8 +1,8 @@
-use serenity::{http::{Http, AttachmentType::{Bytes, self}}, model::{id::MessageId, channel::{Message, Channel, MessageReference, self, Attachment}}};
+use serenity::{http::{Http, AttachmentType::{Bytes, self}}, model::{id::MessageId, channel::{Message, Channel, MessageReference}}};
 use aes_gcm::{Aes256Gcm, Key, Nonce, aead::{Aead, NewAead}};
 use std::{sync::Arc, iter::{FromIterator, Iterator, repeat, }, borrow::Cow,};
 use crate::base::{secret::{KEY, USER_ID}};
-use serde::{Serialize, Deserialize, de::DeserializeOwned};
+use serde::{Serialize, de::DeserializeOwned};
 use bincode;
 
 pub type Data = Vec<u8>;
@@ -35,7 +35,7 @@ async fn get_ref_msg(http : &Arc<Http>, msg_ref : &Option<MessageReference>) -> 
     };
 
     let data_channel = match data_channel_id.to_channel(&http).await {
-        Ok(Channel::Guild((guild_channel))) => guild_channel,
+        Ok(Channel::Guild(guild_channel)) => guild_channel,
         _ => unreachable!(),
     };
 

@@ -7,7 +7,7 @@ pub const DICE_SERVICE : Service = Service{identifier : "dice", handler : dice_h
 
 
 
-fn dice_handler(command : Command, data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> { //Not good code.
+fn dice_handler(_command : Command, _data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> { //Not good code.
 /*    let mut args = &mut command.args.iter().map(|x| x.chars()).flatten().peekable();
 
     let mut answer = String::new();
