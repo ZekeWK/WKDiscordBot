@@ -52,7 +52,7 @@ async fn download_data(msg : &Message, identifier : &str) -> Option<Data> {
 
 fn decrypt(data : Data, data_parent_msg_id : MessageId) -> Data {
     let cipher = Aes256Gcm::new(Key::from_slice(KEY));
-    let nonce = Nonce::from_iter(data_parent_msg_id.0.to_be_bytes().iter().map(|x| *x).chain(repeat(0u8).take(4))); //Check that this works...
+    let nonce = Nonce::from_iter(data_parent_msg_id.0.to_be_bytes().iter().copied().chain(repeat(0u8).take(4))); //Check that this works...
 
     let decrypted = cipher.decrypt(&nonce, data.as_ref()).expect("Decryption did not work.");
 
@@ -70,7 +70,7 @@ pub fn create_attachment(data : Data, msg_id : MessageId, identifier : &str) -> 
 
 fn encrypt(data : Data, msg_id : MessageId) -> Data {
     let cipher = Aes256Gcm::new(Key::from_slice(KEY));
-    let nonce = Nonce::from_iter(msg_id.0.to_be_bytes().iter().map(|x| *x).chain(repeat(0u8).take(4)));
+    let nonce = Nonce::from_iter(msg_id.0.to_be_bytes().iter().copied().chain(repeat(0u8).take(4)));
 
     let encrypted = cipher.encrypt(&nonce, data.as_ref()).expect("Decryption did not work.");
     
