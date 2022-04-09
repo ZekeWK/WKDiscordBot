@@ -25,13 +25,17 @@ impl LiersDice {
         LiersDice { 
             dice_type: dice_type, 
             players: players.into_iter().zip(repeat(dice_cnt)).collect(), 
-            last: (0, 0),
+            last: (0, 0), //(count, dice)
             turn: 0,
         }
     }
 
     fn turn(&self) -> UserId {
         self.players[self.turn].0
+    }
+
+    fn won(&self) -> bool {
+        self.players.iter().filter(|x| x.1 > 0).count() > 1
     }
 
     fn increase_turn(&mut self) {
@@ -43,16 +47,18 @@ impl LiersDice {
         }
     }
 
-    fn raise(&mut self, dice : (u64, u64)) {
-        todo!()
+    fn raise(&mut self, dice : (u64, u64)) -> Result<(), ()> {
+        if dice <= self.last {return Err(())}
+        self.last = dice;
+
+        self.increase_turn();
+
+        Ok(())
+    }
+
+    fn call() {
+
     }
     
     
-}
-
-enum LiersDiceResult {
-    FaultyRaise,
-    SuccessfullCall,
-    UnSuccessfullCall,
-    Win,
 }
