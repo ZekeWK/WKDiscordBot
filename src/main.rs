@@ -12,7 +12,7 @@ mod base {
 
 #[path ="services.rs"]
 mod services {
-    pub mod liers_dice;
+    pub mod liars_dice;
     pub mod info;
     pub mod dice;
 }

@@ -1,7 +1,7 @@
-use serenity::{builder::CreateMessage, model::id::ChannelId};
+use serenity::{builder::CreateMessage, model::{id::{ChannelId, UserId}}};
 use crate::{base::{command::Command, memory::Data}, services::*};
 
-pub const SERVICES : [Service; 6]= [dice::DICE_SERVICE, liers_dice::LIERS_DICE_SERVICE, info::ping::PING_SERVICE, info::help::HELP_SERVICE, info::count::COUNT_SERVICE, info::info::INFO_SERVICE];
+pub const SERVICES : [Service; 6]= [dice::DICE_SERVICE, liars_dice::LIARS_DICE_SERVICE, info::ping::PING_SERVICE, info::help::HELP_SERVICE, info::count::COUNT_SERVICE, info::info::INFO_SERVICE];
 
 #[derive(Clone, Copy)]
 pub struct Service {
@@ -9,9 +9,14 @@ pub struct Service {
     pub handler : ServiceHandler,
 }
 
-pub type ServiceHandler = fn(Command, Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)>;
+pub type ServiceHandler = fn(Command, Option<Data>) -> Vec<(ToMessage, CreateMessage<'static>)>;
+
+pub enum ToMessage {
+    User(UserId),
+    Channel(ChannelId),
+}
 
 pub mod service_prelude {
-    pub use crate::base::{service::Service, command::Command, memory::{Data, to_struct, create_attachment, from_struct}};
+    pub use crate::base::{service::{Service, ServiceHandler, ToMessage::{self, *}}, command::{Command, ArgsIter}, memory::{Data, to_struct, create_attachment, from_struct}};
     pub use serenity::{model::id::ChannelId, builder::CreateMessage};
 }

@@ -1,5 +1,5 @@
-use crate::base::{service::Service, command::Command, memory::Data};
-use serenity::{model::id::ChannelId, builder::CreateMessage};
+use crate::base::service::service_prelude::*;
+use serenity::{builder::CreateMessage};
 
 pub const DICE_SERVICE : Service = Service{identifier : "dice", handler : dice_handler};
 
@@ -7,7 +7,7 @@ pub const DICE_SERVICE : Service = Service{identifier : "dice", handler : dice_h
 
 
 
-fn dice_handler(command : Command, data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> { //Not good code.
+fn dice_handler(_command : Command, _data : Option<Data>) -> Vec<(ToMessage, CreateMessage<'static>)> { //Not good code.
     
     todo!()
 }

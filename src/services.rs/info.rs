@@ -1,13 +1,10 @@
 pub mod ping {
-    use std::iter::repeat_with;
-
-    use serenity::model::id::UserId;
 
     use crate::base::service::service_prelude::*;
 
     pub const PING_SERVICE : Service = Service{identifier : "ping", handler : ping_handler};
 
-    fn ping_handler(mut command : Command, _data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> {
+    fn ping_handler(command : Command, _data : Option<Data>) -> Vec<(ToMessage, CreateMessage<'static>)> {
         /*
         if let Some(message) = ping_annoy(&mut command) {
             return  message;
@@ -15,15 +12,15 @@ pub mod ping {
         else {*/return ping_std(&command);//};
 
     }
-    fn ping_std(command : &Command) -> Vec<(ChannelId, CreateMessage<'static>)> {
+    fn ping_std(command : &Command) -> Vec<(ToMessage, CreateMessage<'static>)> {
         let mut message = CreateMessage::default();
         message.content("Pong!").reference_message(command.message_reference());
         
-        return vec![(command.channel, message)];
+        return vec![(Channel(command.channel), message)];
     }
 
 /*
-    fn ping_annoy(command : &mut Command) -> Option<Vec<(ChannelId, CreateMessage<'static>)>>{
+    fn ping_annoy(command : &mut Command) -> Option<Vec<(ChannelId, Vec<(ToMessage, CreateMessage<'static>)>>{
         let user_str : &str = command.args.next()?;
         if !user_str.starts_with("<@") || !user_str.ends_with(">") {
             return None
@@ -52,13 +49,13 @@ pub mod help {
 
     pub const HELP_SERVICE : Service = Service{identifier : "help", handler : help_handler};
 
-    fn help_handler(command : Command, _data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> {
+    fn help_handler(command : Command, _data : Option<Data>) -> Vec<(ToMessage, CreateMessage<'static>)> {
         let mut message = CreateMessage::default();
         message.content(
             "You will find help here later on."
         ).reference_message(command.message_reference());
 
-        return vec![(command.channel, message)];
+        return vec![(Channel(command.channel), message)];
     }
 }
 
@@ -67,13 +64,13 @@ pub mod info {
 
     pub const INFO_SERVICE : Service = Service{identifier : "info", handler : info_handler};
 
-    fn info_handler(command : Command, _data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> {
+    fn info_handler(command : Command, _data : Option<Data>) -> Vec<(ToMessage, CreateMessage<'static>)> {
         let mut message = CreateMessage::default();
         message.content(
             "<@958421014063239209> is a bot by William Kraft. It is currently under heavy development, but the code can be found at https://github.com/ZekeWK/WKDiscordBot ."
         ).reference_message(command.message_reference());
 
-        return vec![(command.channel, message)];
+        return vec![(Channel(command.channel), message)];
     }
 }
 
@@ -82,7 +79,7 @@ pub mod count {
 
     pub const COUNT_SERVICE : Service = Service{identifier : "chain", handler : count_handler};
 
-    fn count_handler(command : Command, data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> {
+    fn count_handler(command : Command, data : Option<Data>) -> Vec<(ToMessage, CreateMessage<'static>)> {
         
         let mut num = if let Some(data) = data {
             let num : u64 = to_struct(data);
@@ -99,6 +96,6 @@ pub mod count {
         let mut message = CreateMessage::default();
         message.content(format!("You are link {} in the chain!", &num)).add_file(file).reference_message(command.message_reference());
 
-        return vec![(command.channel, message)];
+        return vec![(Channel(command.channel), message)];
     }
 }
