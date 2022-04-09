@@ -8,6 +8,49 @@ pub const DICE_SERVICE : Service = Service{identifier : "dice", handler : dice_h
 
 
 fn dice_handler(command : Command, data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> { //Not good code.
+    
+    todo!()
+}
+
+
+
+
+/* fn parse_dice(command : Command) ->  Vec<(i64, u64)>{
+    let input = command.args.collect::<String>();
+
+    let rolls : Vec<(i64, u64)> = Vec::new();
+    let mut sum = 0i64;
+
+    let mut unproccessed = input.as_str();
+
+    loop {
+        let mut positive = true;
+
+        for (i, c) in unproccessed.chars().enumerate() {
+            match c {
+                '+' => (),
+                '-' => positive = !positive,
+                _ => { unproccessed = unproccessed.split_at(i).1; break;},
+            }
+        }
+
+        for (i, c) in unproccessed.chars().enumerate() {
+            match c {
+                '0'..='9' => (),
+                '-' | '+' => {
+                    let (number, unproccessedt) = unproccessed.split_at(i);
+                    unproccessed = unproccessedt;
+
+                    let number = number.parse();
+                    rolls.append(());
+                },
+                'd' => { unproccessed = unproccessed.split_at(i).1; break;},
+                _ => todo!()
+            }
+        }
+    }   
+}
+ */
     /*
     let mut rolls = command.args.map(|x| x.split("+").filter(|x| *x != ""));
     
@@ -73,5 +116,4 @@ fn dice_handler(command : Command, data : Option<Data>) -> Vec<(ChannelId, Creat
 
     
 */    
-    todo!()
-}
+ 
