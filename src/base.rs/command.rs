@@ -6,6 +6,7 @@ pub const SEPARATOR : &str = " ";
 
 pub type ArgsIter<'a> = std::iter::Filter<std::str::Split<'a, &'static str>, fn(&&'a str) -> bool>;
 
+#[derive(Debug, Clone)]
 pub struct Command<'a> {
     pub author : UserId,
     pub channel : ChannelId,
@@ -24,7 +25,7 @@ impl <'a> Command<'a> {
     }
 }
 
-pub fn command_parse<'a>(msg : &'a Message) -> Result<(Service, Command), CommandError> {
+pub fn command_parse_prefix<'a>(msg : &'a Message) -> Result<(Service, Command), CommandError> {
     let mut args : ArgsIter = msg.content.split(SEPARATOR).filter(|x| *x != "");
     if args.next() != Some(PREFIX) {
         return Err(CommandError::NotBot);
@@ -33,16 +34,35 @@ pub fn command_parse<'a>(msg : &'a Message) -> Result<(Service, Command), Comman
     let author = msg.author.id;
     let channel = msg.channel_id;
     let msg_id = msg.id;
-
+    
     let service_identifier = match args.next() {
         Some(val) => val,
         None => return Err(CommandError::MissingService),
     };
-
-    for service in SERVICES {
-        if service.identifier != service_identifier {continue;}
+    
+    
+    if let Some(service) = get_service(service_identifier) {
         return Ok((service, Command::new(author, channel, msg_id, args)));
     }
 
     return Err(CommandError::NotService);
+}
+
+pub fn command_parse<'a>(msg : &'a Message) -> Command<'a> {
+    let author = msg.author.id;
+    let channel = msg.channel_id;
+    let msg_id = msg.id;
+
+    let args : ArgsIter = msg.content.split(SEPARATOR).filter(|x| *x != "");
+
+    Command::new(author, channel, msg_id, args)
+}
+
+pub fn get_service(identifier : &str) -> Option<Service> {
+    for service in SERVICES {
+        if service.identifier != identifier {continue;}
+        return Some(service);
+    }
+
+    None
 }

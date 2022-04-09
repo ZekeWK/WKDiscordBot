@@ -1,9 +1,11 @@
 use serenity::{http::{Http, AttachmentType::{Bytes, self}}, model::{id::MessageId, channel::{Message, Channel, MessageReference}}};
 use aes_gcm::{Aes256Gcm, Key, Nonce, aead::{Aead, NewAead}};
 use std::{sync::Arc, iter::{FromIterator, Iterator, repeat, }, borrow::Cow,};
-use crate::base::{secret::{KEY, USER_ID}};
+use crate::base::{secret::{KEY, USER_ID}, service::Service};
 use serde::{Serialize, de::DeserializeOwned};
 use bincode;
+
+use super::command::get_service;
 
 pub type Data = Vec<u8>;
 
@@ -15,17 +17,17 @@ pub fn from_struct<T>(instance : T) -> Data where T : Serialize {
     bincode::serialize(&instance).expect("Error serialising.")
 }
 
-pub async fn parent_data(http : &Arc<Http>, msg_ref : &Option<MessageReference>, identifier : &str) -> Option<Data> {
+pub async fn get_data(http : &Arc<Http>, msg_ref : &Option<MessageReference>) -> Option<(Service, Data)> {
     let data_msg = get_ref_msg(http, &msg_ref).await?;
     if data_msg.author.id != USER_ID {
         return None;
     }
     
-    let encrypted = download_data(&data_msg, identifier).await?;
+    let (service, encrypted) = download_data(&data_msg).await?;
     
     let decrypted = decrypt(encrypted, data_msg.message_reference?.message_id?);
 
-    Some(decrypted)
+    Some((service, decrypted))
 }
 
 async fn get_ref_msg(http : &Arc<Http>, msg_ref : &Option<MessageReference>) -> Option<Message>{
@@ -43,11 +45,23 @@ async fn get_ref_msg(http : &Arc<Http>, msg_ref : &Option<MessageReference>) -> 
     return Some(data_msg);
 }
 
-async fn download_data(msg : &Message, identifier : &str) -> Option<Data> {
-    return Some(
+async fn download_data(msg : &Message) -> Option<(Service, Data)> {
+    for attachment in &msg.attachments {
+        let service = match get_service(&attachment.filename) {
+            Some(service) => service,
+            None => continue,
+        };
+        let data = attachment.download().await.unwrap();
+
+        return Some((service, data));
+    }
+
+
+    /*return Some(
     msg.attachments
     .iter().find(|attachment| attachment.filename.starts_with(identifier))?
-    .download().await.expect("Error downloading data."));
+    .download().await.expect("Error downloading data."));*/
+    todo!()
 }
 
 fn decrypt(data : Data, data_parent_msg_id : MessageId) -> Data {
