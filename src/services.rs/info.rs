@@ -8,29 +8,30 @@ pub mod ping {
     pub const PING_SERVICE : Service = Service{identifier : "ping", handler : ping_handler};
 
     fn ping_handler(mut command : Command, _data : Option<Data>) -> Vec<(ChannelId, CreateMessage<'static>)> {
+        /*
         if let Some(message) = ping_annoy(&mut command) {
             return  message;
         }
-        else {return ping_std(&command)};
+        else {*/return ping_std(&command);//};
 
     }
-
     fn ping_std(command : &Command) -> Vec<(ChannelId, CreateMessage<'static>)> {
         let mut message = CreateMessage::default();
         message.content("Pong!").reference_message(command.message_reference());
-
+        
         return vec![(command.channel, message)];
     }
 
+/*
     fn ping_annoy(command : &mut Command) -> Option<Vec<(ChannelId, CreateMessage<'static>)>>{
         let user_str : &str = command.args.next()?;
         if !user_str.starts_with("<@") || !user_str.ends_with(">") {
             return None
         }
-
+        
         let user : UserId = user_str.parse().ok()?;
         let cnt : usize = command.args.next().unwrap_or("5").parse().ok()?;
-
+        
         if cnt > 20 {
             let mut message = CreateMessage::default();
             message.content("To many! The max is 20.").reference_message(command.message_reference());
@@ -40,9 +41,10 @@ pub mod ping {
         message.content(format!("Ping! <@{}>", user));
         
         let messages : Vec<(ChannelId, CreateMessage<'static>)> = repeat_with(|| (command.channel ,message.clone())).take(cnt).collect();
-
+        
         Some(messages)
     }
+*/
 }
 
 pub mod help {
