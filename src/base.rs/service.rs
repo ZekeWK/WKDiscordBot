@@ -17,6 +17,6 @@ pub enum ToMessage {
 }
 
 pub mod service_prelude {
-    pub use crate::base::{service::{Service, ServiceHandler, ToMessage::{self, *}}, command::{Command, ArgsIter}, memory::{Data, to_struct, create_attachment, from_struct}};
+    pub use crate::base::{service::{Service, ServiceHandler, ToMessage::{self, *}}, command::{Command, ArgsIter}, memory::{Data, to_struct, attachment_from_struct, from_struct}};
     pub use serenity::{model::id::ChannelId, builder::CreateMessage};
 }

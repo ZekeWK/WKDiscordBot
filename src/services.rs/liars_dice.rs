@@ -1,4 +1,4 @@
-use crate::base::{service::service_prelude::*, command::Command, memory::{from_struct, to_struct, create_attachment}};
+use crate::base::{service::service_prelude::*, command::Command};
 
 use serde::{Serialize, Deserialize};
 use serenity::model::{id::UserId};
@@ -31,10 +31,7 @@ fn liars_dice_handler(mut command : Command, data : Option<Data>) -> Vec<(ToMess
 
             send_dice(&liars_dice, &mut msgs);
 
-
-
-            let data : Vec<u8> = from_struct(liars_dice);
-            let attachment = create_attachment(data, command.msg, LIARS_DICE_SERVICE.identifier);
+            let attachment = attachment_from_struct(liars_dice, command.msg, LIARS_DICE_SERVICE.identifier);
 
             let mut message = CreateMessage::default();
             message.content(format!("Started a new game! <@{}>, it is your turn!", command.author)).add_file(attachment).reference_message(command.message_reference());
@@ -71,8 +68,7 @@ fn liars_dice_handler(mut command : Command, data : Option<Data>) -> Vec<(ToMess
             let mut message = CreateMessage::default();
             message.content(format!("You have raised! <@{}>, it is your turn!", liars_dice.turn()));
 
-            let data : Vec<u8> = from_struct(liars_dice);
-            let attachment = create_attachment(data, command.msg, LIARS_DICE_SERVICE.identifier);
+            let attachment = attachment_from_struct(liars_dice, command.msg, LIARS_DICE_SERVICE.identifier);
             message.add_file(attachment).reference_message(command.message_reference());
     
             return vec![(Channel(command.channel), message)];
@@ -116,8 +112,7 @@ fn liars_dice_handler(mut command : Command, data : Option<Data>) -> Vec<(ToMess
 
             send_dice(&liars_dice, &mut msgs);
             
-            let data : Vec<u8> = from_struct(liars_dice);
-            let attachment = create_attachment(data, command.msg, LIARS_DICE_SERVICE.identifier);
+            let attachment = attachment_from_struct(liars_dice, command.msg, LIARS_DICE_SERVICE.identifier);
 
             msg.add_file(attachment).reference_message(command.message_reference());
             

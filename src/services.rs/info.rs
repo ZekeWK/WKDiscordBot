@@ -80,7 +80,6 @@ pub mod count {
     pub const COUNT_SERVICE : Service = Service{identifier : "chain", handler : count_handler};
 
     fn count_handler(command : Command, data : Option<Data>) -> Vec<(ToMessage, CreateMessage<'static>)> {
-        
         let mut num = if let Some(data) = data {
             let num : u64 = to_struct(data);
             num   
@@ -91,7 +90,7 @@ pub mod count {
         
         num += 1;
         
-        let file = create_attachment(from_struct(num), command.msg, COUNT_SERVICE.identifier);
+        let file = attachment_from_struct(num, command.msg, COUNT_SERVICE.identifier);
         
         let mut message = CreateMessage::default();
         message.content(format!("You are link {} in the chain!", &num)).add_file(file).reference_message(command.message_reference());
